@@ -21,6 +21,11 @@ urlpatterns = [
     path('catalog/tags/<int:pk>/', views.TagDetailView.as_view(), name='tag_detail'),
     path('catalog/tags/add/', views.TagCreateView.as_view(), name='tag_add'),
     path('catalog/add_category/', views.add_category, name='add_category'),
+    path('orders/add/', views.OrderCreateView.as_view(), name='create_order'),
+    path('orders/', views.OrderListView.as_view(), name='order_list'),
+    path('orders/<int:pk>/', views.OrderDetailView.as_view(), name='order_detail'),
+    path('orders/<int:pk>/update/', views.OrderUpdateView.as_view(), name='order_update'),
+    path('orders/<int:pk>/delete/', views.OrderDeleteView.as_view(), name='order_delete'),
 ]
 
 if settings.DEBUG:

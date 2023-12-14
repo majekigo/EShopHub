@@ -1,8 +1,9 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
-from store.forms import CategoryForm, ProductForm, TagForm
-from store.models import Product, Tag, Category
+from store.forms import CategoryForm, ProductForm, TagForm, OrderForm, OrderPositionFormSet
+from store.models import Product, Tag, Category, Order
 from django.urls import reverse_lazy
 
 
@@ -125,3 +126,77 @@ class TagCreateView(CreateView):
     form_class = TagForm
     template_name = 'TagView/tag_add.html'
     success_url = reverse_lazy('tag_list')
+
+
+#Order
+class OrderListView(ListView):
+    model = Order
+    template_name = 'OrderView/order_list.html'
+    context_object_name = 'orders'
+    paginate_by = 3
+
+
+class OrderDetailView(DetailView):
+    model = Order
+    template_name = 'OrderView/order_detail.html'
+    context_object_name = 'order'
+
+
+class OrderCreateView(CreateView):
+    model = Order
+    form_class = OrderForm
+    template_name = 'OrderView/order_add.html'
+    success_url = reverse_lazy('order_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['formset'] = OrderPositionFormSet(self.request.POST, prefix='order_positions')
+        else:
+            context['formset'] = OrderPositionFormSet(prefix='order_positions')
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        if formset.is_valid():
+            self.object = form.save()
+            formset.instance = self.object
+            formset.save()
+            return redirect(reverse_lazy('order_list'))
+        else:
+            return redirect(reverse_lazy('create_order'))
+
+
+class OrderUpdateView(UpdateView):
+    model = Order
+    template_name = 'OrderView/order_update.html'
+    form_class = OrderForm
+    success_url = reverse_lazy('order_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['formset'] = OrderPositionFormSet(
+                self.request.POST, instance=self.object)
+        else:
+            context['formset'] = OrderPositionFormSet(instance=self.object)
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        if formset.is_valid():
+            self.object = form.save()
+            formset.instance = self.object
+            formset.save()
+            return HttpResponseRedirect(self.get_success_url())
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+
+
+class OrderDeleteView(DeleteView):
+    model = Order
+    template_name = 'OrderView/order_delete.html'
+    context_object_name = 'order'
+    success_url = reverse_lazy('order_list')
