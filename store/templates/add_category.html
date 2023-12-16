@@ -3,7 +3,7 @@
 {% block link1 %}<a class="nav-link" href="{% url 'catalog' %}">Каталог</a>{% endblock %}
 {% block link2 %}<a class="nav-link" href="{% url 'category_list' %}">Категории</a>{% endblock %}
 {% block content %}
-    <h1>Добавить товар</h1>
+    <h1>Добавить категорию</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}

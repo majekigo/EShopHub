@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% block title %} Каталог {% endblock %}
-{% block link1 %}<a class="nav-link" href="{% url 'index' %}">Главная</a>{% endblock %}
-{% block link2 %}<a class="nav-link" href="{% url 'cart' %}">Корзина</a>{% endblock %}
-{% block link3 %}<a class="nav-link" href="{% url 'userprofile' %}">Профиль</a>{% endblock %}
+{% block link1 %}<a class="nav-link" href="{% url 'product_add' %}">Добавить товар</a>{% endblock %}
+{% block link2 %}<a class="nav-link" href="{% url 'tag_add' %}">Добавить тег</a>{% endblock %}
+{% block link3 %}<a class="nav-link" href="{% url 'add_category' %}">Добавить категорию</a>{% endblock %}
+{% block link4 %}<a class="nav-link" href="{% url 'create_order' %}">Добавить заказ</a>{% endblock %}
 {% block content %}
   <div class="container">
     <div class="row">
