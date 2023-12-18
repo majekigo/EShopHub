@@ -1,4 +1,6 @@
+from django.contrib.auth import login
 from django.contrib.auth.decorators import permission_required, login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -70,6 +72,7 @@ class ProductDetailView(DetailView):
     context_object_name = 'product'
 
 
+@login_required
 @permission_required('add_product')
 class ProductCreateView(CreateView):
     model = Product
@@ -153,6 +156,7 @@ class OrderDetailView(DetailView):
     context_object_name = 'order'
 
 
+@login_required
 @permission_required('add_order')
 class OrderCreateView(CreateView):
     model = Order
@@ -180,6 +184,7 @@ class OrderCreateView(CreateView):
             return redirect(reverse_lazy('create_order'))
 
 
+@login_required
 @permission_required('change_order')
 class OrderUpdateView(UpdateView):
     model = Order
@@ -214,3 +219,17 @@ class OrderDeleteView(DeleteView):
     template_name = 'OrderView/order_delete.html'
     context_object_name = 'order'
     success_url = reverse_lazy('order_list')
+
+
+def register_user(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('index')
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'Auth/register.html', {'form': form})
+

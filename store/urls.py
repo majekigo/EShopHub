@@ -1,9 +1,10 @@
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
 from django.conf.urls.static import static
 from EShopHub import settings
 from store import views
 from store.views import ProductDetailView, ProductCreateView, ProductUpdateView, ProductDeleteView, CategoryListView, \
-    CategoryDetailView, CategoryCreateView, TagListView
+    CategoryDetailView, CategoryCreateView, TagListView, register_user
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -26,6 +27,10 @@ urlpatterns = [
     path('orders/<int:pk>/', views.OrderDetailView, name='order_detail'),
     path('orders/<int:pk>/update/', views.OrderUpdateView, name='order_update'),
     path('orders/<int:pk>/delete/', views.OrderDeleteView, name='order_delete'),
+
+    path('login/', LoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('register/', register_user, name='register'),
 ]
 
 if settings.DEBUG:

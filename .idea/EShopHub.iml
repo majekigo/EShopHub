@@ -27,6 +27,7 @@
         <option value="$MODULE_DIR$/store/templates" />
         <option value="$MODULE_DIR$/user/templates" />
         <option value="$MODULE_DIR$/api/templates" />
+        <option value="$MODULE_DIR$/auth/templates" />
       </list>
     </option>
   </component>
