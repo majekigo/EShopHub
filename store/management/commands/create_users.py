@@ -11,6 +11,7 @@ class Command(BaseCommand):
         admin_group, _ = Group.objects.get_or_create(name='Админ')
         buyer_group, _ = Group.objects.get_or_create(name='Покупатель')
 
+
         product_content_type = ContentType.objects.get_for_model(Product)
         category_content_type = ContentType.objects.get_for_model(Category)
         tag_content_type = ContentType.objects.get_for_model(Tag)
@@ -40,5 +41,5 @@ class Command(BaseCommand):
             buyer_user.groups.add(buyer_group)
             buyer_users.append(buyer_user)
 
-        self.stdout.write(self.style.SUCCESS('Работает'))
+        self.stdout.write(self.style.SUCCESS('Сработало успешно!'))
 
