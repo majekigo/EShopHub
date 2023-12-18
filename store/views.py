@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import permission_required, login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -29,6 +30,7 @@ def catalog(request):
     return render(request, 'catalog.html', {'products': products})
 
 
+@permission_required('add_category')
 def add_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
@@ -40,12 +42,14 @@ def add_category(request):
     return render(request, 'add_category.html', {'form': form})
 
 
+@login_required
 def products_by_tag(request, tag_name):
     tag = get_object_or_404(Tag, name=tag_name)
     products_with_tag = Product.objects.filter(tags=tag)
     return render(request, 'products_by_tag.html', {'products': products_with_tag, 'tag': tag})
 
 
+@login_required
 def products_by_category(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
     products_in_category = Product.objects.filter(categories=category)
@@ -66,6 +70,7 @@ class ProductDetailView(DetailView):
     context_object_name = 'product'
 
 
+@permission_required('add_product')
 class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
@@ -73,6 +78,7 @@ class ProductCreateView(CreateView):
     success_url = reverse_lazy('catalog')
 
 
+@permission_required('change_product')
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
@@ -81,6 +87,7 @@ class ProductUpdateView(UpdateView):
     success_url = reverse_lazy('catalog')
 
 
+@permission_required('delete_product')
 class ProductDeleteView(DeleteView):
     model = Product
     template_name = 'ProductView/product_delete.html'
@@ -101,6 +108,7 @@ class CategoryDetailView(DetailView):
     context_object_name = 'category'
 
 
+@permission_required('add_category')
 class CategoryCreateView(CreateView):
     model = Category
     form_class = CategoryForm
@@ -121,6 +129,7 @@ class TagDetailView(DetailView):
     context_object_name = 'tag'
 
 
+@permission_required('add_tag')
 class TagCreateView(CreateView):
     model = Tag
     form_class = TagForm
@@ -128,6 +137,7 @@ class TagCreateView(CreateView):
     success_url = reverse_lazy('tag_list')
 
 
+@login_required
 #Order
 class OrderListView(ListView):
     model = Order
@@ -136,12 +146,14 @@ class OrderListView(ListView):
     paginate_by = 3
 
 
+@login_required
 class OrderDetailView(DetailView):
     model = Order
     template_name = 'OrderView/order_detail.html'
     context_object_name = 'order'
 
 
+@permission_required('add_order')
 class OrderCreateView(CreateView):
     model = Order
     form_class = OrderForm
@@ -168,6 +180,7 @@ class OrderCreateView(CreateView):
             return redirect(reverse_lazy('create_order'))
 
 
+@permission_required('change_order')
 class OrderUpdateView(UpdateView):
     model = Order
     template_name = 'OrderView/order_update.html'
@@ -195,6 +208,7 @@ class OrderUpdateView(UpdateView):
             return self.render_to_response(self.get_context_data(form=form))
 
 
+@permission_required('delete_order')
 class OrderDeleteView(DeleteView):
     model = Order
     template_name = 'OrderView/order_delete.html'
