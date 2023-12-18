@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %} API {% endblock %}
+{% block link1 %}<a class="nav-link" href="{% url 'api_create' product_id=1 %}">Create</a>{% endblock %}
+{% block link2 %}<a class="nav-link" href="{% url 'api_read' product_id=1 %}">Read</a>{% endblock %}
+{% block link3 %}<a class="nav-link" href="{% url 'api_update' product_id=1 %}">Update</a>{% endblock %}
+{% block link4 %}<a class="nav-link" href="{% url 'api_delete' product_id=1 %}">Delete</a>{% endblock %}
+{% block h2 %}API{% endblock %}
+
